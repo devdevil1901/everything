@@ -26,6 +26,27 @@ class AppTest {
 
     @ExperimentalUnsignedTypes
     @Test
+    fun testDefinitionFromFile() {
+        val def = Definition(specOfGptHeader, "gptHeader")
+        val gptHeader = FileHandler.readAll("src/test/resources/gpt.bin") ?: return assertTrue { false }
+        val buffer = HexaBuffer(gptHeader)
+        val report = Parser(def).parse(buffer) ?: return assertTrue { false }
+
+        var field = report.getFiled("version") ?: return assertTrue { false }
+        assertTrue { (field.value as UnsignedDword).value == 65536u }
+
+        field = report.getFiled("Size of header") ?: return assertTrue { false }
+        assertTrue { (field.value as UnsignedDword).value == 92u }
+        field = report.getFiled("crc32 of header") ?: return assertTrue { false }
+        assertTrue { (field.value as StringValue).value == "68D961EE" }
+        field = report.getFiled("LBA of GPT header copy") ?: return assertTrue { false }
+        assertTrue { (field.value as StringValue).value == "000000003B9D0FFF" }
+        field = report.getFiled("Disk GUID") ?: return assertTrue { false }
+        assertTrue { (field.value as StringValue).value == "42F0217E-3EE0-43FF-986E-EE5697996565" }
+    }
+
+    @ExperimentalUnsignedTypes
+    @Test
     fun testDefinition() {
         val def = Definition(specOfGptHeader, "gptHeader")
         val buffer = HexaBuffer(gptHeader)
