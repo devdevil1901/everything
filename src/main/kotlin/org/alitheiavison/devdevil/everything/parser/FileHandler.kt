@@ -25,9 +25,8 @@ object FileHandler {
     fun getSize(path: String): Long = File(path).length()
 
     @ExperimentalUnsignedTypes
-    fun readAll(path: String, processBuffer: (buffer: UByteArray) -> Unit) = File(path).inputStream().use {
-        val buffer = it.readAllBytes().toUByteArray()
-        processBuffer(buffer)
+    fun readAll(path: String): UByteArray? = File(path).inputStream().use {
+        return@use it.readAllBytes()?.toUByteArray()
     }
 
     fun open(path: String): InputStream = File(path).inputStream()
