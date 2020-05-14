@@ -25,8 +25,8 @@ object FileHandler {
     fun getSize(path: String): Long = File(path).length()
 
     @ExperimentalUnsignedTypes
-    fun readAll(path: String): UByteArray? = File(path).inputStream().use {
-        return@use it.readAllBytes()?.toUByteArray()
+    fun readAll(path: String): UByteArray = File(path).inputStream().use {
+        return@use it.readBytes().toUByteArray()
     }
 
     fun open(path: String): InputStream = File(path).inputStream()
@@ -41,7 +41,8 @@ object FileHandler {
     }
 }
 
+@ExperimentalUnsignedTypes
 fun String.getBytesFromResource(): UByteArray? =
         this::class.java.getResourceAsStream(this).use {
-            return@use it?.readAllBytes()?.toUByteArray()
+            return@use it?.readBytes()?.toUByteArray()
         }
