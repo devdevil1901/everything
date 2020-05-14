@@ -18,17 +18,15 @@ class AppTest {
 
     @Test
     fun testBit() {
-        val value = FlagOfDword(3)
-        val flag = 0b0010
-        val result = value.isSetBit(flag)
-        assertTrue { result }
+        assertTrue { FlagOfDword(3).isSetBit(0b0010) }
+        assertTrue { FlagOfDword(8).isSetBit(0b111111) }
     }
 
     @ExperimentalUnsignedTypes
     @Test
     fun testDefinitionFromFile() {
         val def = Definition(specOfGptHeader, "gptHeader")
-        val gptHeader = FileHandler.readAll("src/test/resources/gpt.bin") ?: return assertTrue { false }
+        val gptHeader = FileHandler.readAll("src/test/resources/gpt.bin")
         val buffer = HexaBuffer(gptHeader)
         val report = Parser(def).parse(buffer) ?: return assertTrue { false }
 
